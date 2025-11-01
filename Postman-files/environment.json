@@ -1,0 +1,81 @@
+{
+	"id": "44e5e681-f058-4e87-885c-59a1ec99bc3b",
+	"name": "Environment-desafio-api-QA",
+	"values": [
+		{
+			"key": "urlBase",
+			"value": "https://serverest.dev/",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "nome",
+			"value": "Gustavo Ávila",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "password",
+			"value": "Teste@01112025",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "administradorTrue",
+			"value": "true",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "administradorFalse",
+			"value": "false",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "user_id_criado",
+			"value": "fV2RubQIiS1bVVqc",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "email",
+			"value": "usuario_555859@teste.com",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "passwordInvalido",
+			"value": "Teste@01112026",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "emailInvalido",
+			"value": "teste@qa.com.br",
+			"type": "default",
+			"enabled": true
+		},
+		{
+				"key": "produto_id",
+				"value": "K6leHdftCeOJj8BJ",
+				"type": "any",
+				"enabled": true
+		},
+		{
+			"key": "token",
+			"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzdWFyaW9fNTU1ODU5QHRlc3RlLmNvbSIsInBhc3N3b3JkIjoiVGVzdGVAMDExMTIwMjUiLCJpYXQiOjE3NjIwMjM2ODEsImV4cCI6MTc2MjAyNDI4MX0.-8j3-M2pZPUC4HJbwB4wK9SVY_2SS2ozjBisl6ux3rY",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "produto_id_Aspas",
+			"value": "K6leHdftCeOJj8BJ",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2025-11-01T19:01:30.365Z",
+	"_postman_exported_using": "Postman/11.62.0"
+}

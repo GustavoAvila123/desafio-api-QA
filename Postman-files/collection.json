@@ -1,0 +1,717 @@
+{
+	"info": {
+		"_postman_id": "9109123f-60ea-409a-a6d6-9990f5625332",
+		"name": "desafio-api-QA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16154067"
+	},
+	"item": [
+		{
+			"name": "Passo 1 - Cadastrar Usuário - 201 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"1.1 - Verifique se o tempo de resposta é inferior a 1000 ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000, \"Tempo de resposta é \" + pm.response.responseTime + \" ms\");\r",
+							"});\r",
+							"\r",
+							"function verificarStatusCodeInterno(valorInicial, valorFinal) {\r",
+							"    pm.test(`1.2 - O código de status deve estar entre ${valorInicial} e ${valorFinal}`, function () {\r",
+							"        pm.expect(pm.response.code).to.be.within(valorInicial, valorFinal);\r",
+							"    });\r",
+							"}\r",
+							"verificarStatusCodeInterno(200, 299);\r",
+							"\r",
+							"pm.test(\"1.3 - O status code deverá ser Created\", function () {\r",
+							"    pm.response.to.have.status(\"Created\");\r",
+							"});\r",
+							"\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"1.4 - Mensagem de sucesso validada\", function () {\r",
+							"    pm.expect(response.message).to.eql(\"Cadastro realizado com sucesso\");\r",
+							"});\r",
+							"\r",
+							"if (response._id) {\r",
+							"    pm.environment.set(\"user_id_criado\", response._id);\r",
+							"\r",
+							"    pm.test(\"1.5 - ID armazenado com sucesso\", function () {\r",
+							"        pm.expect(response._id).to.exist;\r",
+							"    });\r",
+							"} else {\r",
+							"    pm.test(\"1.5 - Campo '_id' não encontrado\", function () {\r",
+							"        pm.expect(response._id).to.not.be.undefined;\r",
+							"    });\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const randomNumber = Math.floor(Math.random() * 1000000);\r",
+							"const email = `usuario_${randomNumber}@teste.com`;\r",
+							"\r",
+							"pm.environment.set(\"email\", `\"${email}\"`);\r",
+							"\r",
+							"console.log(\"Email gerado:\", email);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": {{nome}},\n  \"email\": {{email}},\n  \"password\": {{password}},\n  \"administrador\": {{administradorTrue}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlBase}}usuarios",
+					"host": [
+						"{{urlBase}}usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passo 2 - Usuário Já Existente - 400 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"2.1 - Verifique se o tempo de resposta é inferior a 1000 ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000, \"Tempo de resposta é \" + pm.response.responseTime + \" ms\");\r",
+							"});\r",
+							"\r",
+							"function verificarStatusCodeInterno(valorInicial, valorFinal) {\r",
+							"    pm.test(`2.2 - O código de status deve estar entre ${valorInicial} e ${valorFinal}`, function () {\r",
+							"        pm.expect(pm.response.code).to.be.within(valorInicial, valorFinal);\r",
+							"    });\r",
+							"}\r",
+							"verificarStatusCodeInterno(400, 499);\r",
+							"\r",
+							"pm.test(\"2.3 - O status code deverá ser Bad Request\", function () {\r",
+							"    pm.response.to.have.status(\"Bad Request\");\r",
+							"});\r",
+							"\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"2.4 - Validar mensagens de erro\", function () {\r",
+							"    pm.expect(response.message).to.eql(\"Este email já está sendo usado\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": {{nome}},\n  \"email\": {{email}},\n  \"password\": {{password}},\n  \"administrador\": {{administradorTrue}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlBase}}usuarios",
+					"host": [
+						"{{urlBase}}usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passo 3 - Realizar Login - 200 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"3.1 - Verifique se o tempo de resposta é inferior a 1000 ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000, \"Tempo de resposta é \" + pm.response.responseTime + \" ms\");\r",
+							"});\r",
+							"\r",
+							"function verificarStatusCodeInterno(valorInicial, valorFinal) {\r",
+							"    pm.test(`3.2 - O código de status deve estar entre ${valorInicial} e ${valorFinal}`, function () {\r",
+							"        pm.expect(pm.response.code).to.be.within(valorInicial, valorFinal);\r",
+							"    });\r",
+							"}\r",
+							"verificarStatusCodeInterno(200, 299);\r",
+							"\r",
+							"pm.test(\"3.3 - O status code deverá ser OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"3.4 - Mensagem de sucesso validada\", function () {\r",
+							"    pm.expect(response.message).to.eql(\"Login realizado com sucesso\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"3.5 - Validação do campo 'authorization' e começa com 'Bearer'\", function () {\r",
+							"    pm.expect(pm.response.json()).to.have.property(\"authorization\");\r",
+							"\r",
+							"    const token = pm.response.json().authorization;\r",
+							"\r",
+							"    pm.expect(token).to.match(/^Bearer\\s.+/);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"3.6 - Campo authorization existente\", function () {\r",
+							"    pm.expect(response).to.have.property(\"authorization\");\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"token\", response.authorization);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": {{email}},\n  \"password\": {{password}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlBase}}login",
+					"host": [
+						"{{urlBase}}login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passo 4 - Logando com Senha Inválida - 401 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"4.1 - Verifique se o tempo de resposta é inferior a 1000 ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000, \"Tempo de resposta é \" + pm.response.responseTime + \" ms\");\r",
+							"});\r",
+							"\r",
+							"function verificarStatusCodeInterno(valorInicial, valorFinal) {\r",
+							"    pm.test(`4.2 - O código de status deve estar entre ${valorInicial} e ${valorFinal}`, function () {\r",
+							"        pm.expect(pm.response.code).to.be.within(valorInicial, valorFinal);\r",
+							"    });\r",
+							"}\r",
+							"verificarStatusCodeInterno(400, 499);\r",
+							"\r",
+							"pm.test(\"4.3 - O status code deverá ser Unauthorized\", function () {\r",
+							"    pm.response.to.have.status(\"Unauthorized\");\r",
+							"});\r",
+							"\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"4.4 - Mensagem de erro validada\", function () {\r",
+							"    pm.expect(response.message).to.eql(\"Email e/ou senha inválidos\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": {{email}},\n  \"password\": {{passwordInvalido}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlBase}}login",
+					"host": [
+						"{{urlBase}}login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passo 5 - Logando com Email Inválido - 401 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"5.1 - Verifique se o tempo de resposta é inferior a 1000 ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000, \"Tempo de resposta é \" + pm.response.responseTime + \" ms\");\r",
+							"});\r",
+							"\r",
+							"function verificarStatusCodeInterno(valorInicial, valorFinal) {\r",
+							"    pm.test(`5.2 - O código de status deve estar entre ${valorInicial} e ${valorFinal}`, function () {\r",
+							"        pm.expect(pm.response.code).to.be.within(valorInicial, valorFinal);\r",
+							"    });\r",
+							"}\r",
+							"verificarStatusCodeInterno(400, 499);\r",
+							"\r",
+							"pm.test(\"5.3 - O status code deverá ser Unauthorized\", function () {\r",
+							"    pm.response.to.have.status(\"Unauthorized\");\r",
+							"});\r",
+							"\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"5.4 - Mensagem de erro validada\", function () {\r",
+							"    pm.expect(response.message).to.eql(\"Email e/ou senha inválidos\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": {{emailInvalido}},\n  \"password\": {{password}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlBase}}login",
+					"host": [
+						"{{urlBase}}login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passo 6 - Lista de Produtos Cadastrados - 200 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"6.1 - Verifique se o tempo de resposta é inferior a 1000 ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000, \"Tempo de resposta é \" + pm.response.responseTime + \" ms\");\r",
+							"});\r",
+							"\r",
+							"function verificarStatusCodeInterno(valorInicial, valorFinal) {\r",
+							"    pm.test(`6.2 - O código de status deve estar entre ${valorInicial} e ${valorFinal}`, function () {\r",
+							"        pm.expect(pm.response.code).to.be.within(valorInicial, valorFinal);\r",
+							"    });\r",
+							"}\r",
+							"verificarStatusCodeInterno(200, 299);\r",
+							"\r",
+							"pm.test(\"6.3 - O status code deverá ser OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"6.4 - Campo 'quantidade' existente\", function () {\r",
+							"    pm.expect(response).to.have.property(\"quantidade\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"6.5 - Campo 'produtos' existentes\", function () {\r",
+							"    pm.expect(response).to.have.property(\"produtos\");\r",
+							"    pm.expect(response.produtos).to.be.an(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"6.6 - O valor do campo 'quantidade' é igual ao número de produtos retornados\", function () {\r",
+							"    pm.expect(response.quantidade).to.eql(response.produtos.length);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"6.7 - Cada produto possui os campos esperados\", function () {\r",
+							"    response.produtos.forEach(produto => {\r",
+							"        pm.expect(produto).to.have.property(\"nome\");\r",
+							"        pm.expect(produto).to.have.property(\"preco\");\r",
+							"        pm.expect(produto).to.have.property(\"descricao\");\r",
+							"        pm.expect(produto).to.have.property(\"quantidade\");\r",
+							"        pm.expect(produto).to.have.property(\"_id\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"const produtoSelecionado = response.produtos.find(p => p.nome === \"Samsung 60 polegadas\");\r",
+							"\r",
+							"pm.test(\"6.8 - O produto 'Samsung 60 polegadas' foi encontrado\", function () {\r",
+							"    pm.expect(produtoSelecionado).to.not.be.undefined;\r",
+							"});\r",
+							"\r",
+							"if (produtoSelecionado) {\r",
+							"    pm.environment.set(\"produto_id\", produtoSelecionado._id);\r",
+							"    console.log(\"ID do produto salvo:\", produtoSelecionado._id);\r",
+							"}\r",
+							"\r",
+							"if (produtoSelecionado) { \r",
+							"    pm.environment.set(\"produto_id_Aspas\", JSON.stringify(produtoSelecionado._id)); \r",
+							"    console.log(\"ID do produto salvo:\", JSON.stringify(produtoSelecionado._id));\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{urlBase}}produtos",
+					"host": [
+						"{{urlBase}}produtos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passo 7 - Lista de Produto ID - 200 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"7.1 - Verifique se o tempo de resposta é inferior a 1000 ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000, \"Tempo de resposta é \" + pm.response.responseTime + \" ms\");\r",
+							"});\r",
+							"\r",
+							"function verificarStatusCodeInterno(valorInicial, valorFinal) {\r",
+							"    pm.test(`7.2 - O código de status deve estar entre ${valorInicial} e ${valorFinal}`, function () {\r",
+							"        pm.expect(pm.response.code).to.be.within(valorInicial, valorFinal);\r",
+							"    });\r",
+							"}\r",
+							"verificarStatusCodeInterno(200, 299);\r",
+							"\r",
+							"pm.test(\"7.3 - O status code deverá ser OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"7.4 - Campo 'quantidade' existente\", function () {\r",
+							"    pm.expect(response).to.have.property(\"quantidade\");\r",
+							"});\r",
+							"\r",
+							"const produtoIdSalvo = pm.environment.get(\"produto_id\");\r",
+							"\r",
+							"pm.test(\"7.5 - O retorno possui o campo '_id'\", function () {\r",
+							"    pm.expect(response).to.have.property(\"_id\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"7.6 - O campo _id está retornando o mesmo valor da variável salva\", function () {\r",
+							"    pm.expect(response._id).to.eql(produtoIdSalvo);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"7.7 - Valida que o nome do produto é 'Samsung 60 polegadas'\", function () {\r",
+							"    pm.expect(response.nome).to.eql(\"Samsung 60 polegadas\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{urlBase}}produtos/{{produto_id}}",
+					"host": [
+						"{{urlBase}}produtos"
+					],
+					"path": [
+						"{{produto_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passo 8 - Cadastro de Carrinho - 201 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"8.1 - Verifique se o tempo de resposta é inferior a 1000 ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000, \"Tempo de resposta é \" + pm.response.responseTime + \" ms\");\r",
+							"});\r",
+							"\r",
+							"function verificarStatusCodeInterno(valorInicial, valorFinal) {\r",
+							"    pm.test(`8.2 - O código de status deve estar entre ${valorInicial} e ${valorFinal}`, function () {\r",
+							"        pm.expect(pm.response.code).to.be.within(valorInicial, valorFinal);\r",
+							"    });\r",
+							"}\r",
+							"verificarStatusCodeInterno(200, 299);\r",
+							"\r",
+							"pm.test(\"8.3 - O status code deverá ser Created\", function () {\r",
+							"    pm.response.to.have.status(\"Created\");\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"8.4 - Campo 'produto_id' existente\", function () {\r",
+							"    pm.expect(response).to.have.property(\"_id\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"8.5 - Mensagem de sucesso validada\", function () {\r",
+							"    pm.expect(response.message).to.eql(\"Cadastro realizado com sucesso\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"produtos\": [\n    {\n      \"idProduto\": {{produto_id_Aspas}},\n      \"quantidade\": 10\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlBase}}carrinhos",
+					"host": [
+						"{{urlBase}}carrinhos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passo 9 - Cancelar Compra - 200 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"9.1 - Verifique se o tempo de resposta é inferior a 1000 ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000, \"Tempo de resposta é \" + pm.response.responseTime + \" ms\");\r",
+							"});\r",
+							"\r",
+							"function verificarStatusCodeInterno(valorInicial, valorFinal) {\r",
+							"    pm.test(`9.2 - O código de status deve estar entre ${valorInicial} e ${valorFinal}`, function () {\r",
+							"        pm.expect(pm.response.code).to.be.within(valorInicial, valorFinal);\r",
+							"    });\r",
+							"}\r",
+							"verificarStatusCodeInterno(200, 299);\r",
+							"\r",
+							"pm.test(\"9.3 - O status code deverá ser OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"9.4 - Mensagem de sucesso validada\", function () {\r",
+							"    pm.expect(response.message).to.eql(\"Registro excluído com sucesso. Estoque dos produtos reabastecido\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{urlBase}}carrinhos/cancelar-compra",
+					"host": [
+						"{{urlBase}}carrinhos"
+					],
+					"path": [
+						"cancelar-compra"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passo 10 - Excluindo Usuário Gerado - 200 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"10.1 - Verifique se o tempo de resposta é inferior a 1000 ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000, \"Tempo de resposta é \" + pm.response.responseTime + \" ms\");\r",
+							"});\r",
+							"\r",
+							"function verificarStatusCodeInterno(valorInicial, valorFinal) {\r",
+							"    pm.test(`10.2 - O código de status deve estar entre ${valorInicial} e ${valorFinal}`, function () {\r",
+							"        pm.expect(pm.response.code).to.be.within(valorInicial, valorFinal);\r",
+							"    });\r",
+							"}\r",
+							"verificarStatusCodeInterno(200, 299);\r",
+							"\r",
+							"pm.test(\"10.3 - O status code deverá ser OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"10.4 - Validar mensagens de sucesso\", function () {\r",
+							"    pm.expect(response.message).to.eql(\"Registro excluído com sucesso\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{urlBase}}usuarios/{{user_id_criado}}",
+					"host": [
+						"{{urlBase}}usuarios"
+					],
+					"path": [
+						"{{user_id_criado}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
